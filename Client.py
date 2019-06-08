@@ -14,6 +14,7 @@ if __name__ == '__main__':
         connection = rpyc.connect('192.168.0.52', 19961)     # adres ip i port
     except:
         print("Connection error")
+        exit()
 
     while True:
         value = input("Wpisz wyraz ciagu ktory chcesz obliczyc:    ")
