@@ -1,8 +1,10 @@
 import rpyc
 from rpyc.utils.server import ThreadedServer
-
+import subprocess
 
 class MonitorService(rpyc.Service):
+
+    filename = 'test.py'
 
     #funkcja wywoluje sie podczas nawiazywania polaczenia
     def on_connect(self, conn):
@@ -13,23 +15,19 @@ class MonitorService(rpyc.Service):
         print("Zerwano polaczenie")
 
 
-    def exposed_run_fibonacci(self, n):
-        if n == 1:
-            return 0
-        elif n == 2:
-            return 1
-        else:
-            pom2 = 1;
-            result = 1;
-
-            for i in range(n-2):
-                pom1 = result
-                result = pom1 + pom2;
-                pom2 = pom1;
-
-            return result;
+    def exposed_save_code(self, code : list):
+        file = open(self.filename, 'w')
+        file.truncate()
+        for line in code:
+            file.write(line)
+        file.close()
+        return True
 
 
+    #funkcja wywolujaca kod zaposany w pliku test.py
+    def exposed_execute_code(self, n : int):
+        fib = subprocess.call("python "+self.filename + ' ' + str(n))
+        return int(fib)
 
 
 if __name__ == '__main__':
