@@ -7,4 +7,4 @@ if __name__ == '__main__':
     result_id = resultsDataBase.add_program_result(result)
 
     print("All results from base:")
-    resultsDataBase.select_all_results()
+    rows = resultsDataBase.select_all_results()

@@ -71,7 +71,7 @@ class ResultsDataBase:
     def select_all_results(self):
         """
             Print all results from base
-            :return:
+            :return: rows
         """
 
         conn = self.create_connection(self.database)
@@ -83,6 +83,8 @@ class ResultsDataBase:
 
         for row in rows:
             print(row)
+
+        return rows
 
     def main(self):
         # create a database connection
@@ -96,4 +98,4 @@ class ResultsDataBase:
             result_id = self.add_program_result(result)
 
             print("Get all results from base")
-            self.select_all_results()
+            rows = self.select_all_results()
