@@ -5,10 +5,13 @@ from dbmanager import DbManager
 import difflib
 import threading
 
-class Module3Server(Service):
+class Module4Server(Service):
 
     filename = 'test.py'
     db = DbManager('localhost', 'root', '', 'testowa')
+    message_for_client = ''
+    client_program_id = 0
+    db_thread = threading.Thread()
 
     def exposed_create_table(self):
         self.db = DbManager('localhost', 'root', '', 'testowa')
@@ -23,15 +26,18 @@ class Module3Server(Service):
             file.write(line)
             code_text += line
 
-        db_thread = threading.Thread(target=self.save_into_db, args=(code_text,))
-        db_thread.start()
+        self.db_thread = threading.Thread(target=self.save_into_db, args=(code_text,))
+        self.db_thread.start()
+        
         file.close()
-        return True
+        return
 
     def save_into_db(self, code : str):
         sql = "INSERT INTO programs (program_name, code_text) VALUES (\'" + self.filename + "\',\'" + code + "\')"
         self.db.executesql(sql)
         self.db.commit_changes()
+        self.client_program_id = self.db.cursor.lastrowid
+        return self.client_program_id
 
     def exposed_execute_code(self, n : int):
         fib = subprocess.call("python "+self.filename + ' ' + str(n))
@@ -45,6 +51,9 @@ class Module3Server(Service):
         if row == None:
             return 
         code = str(row['code_text'])
+        message = ''
+        new_id_text = '=========\nID = '
+        sim = 'Similarity = '
         for r in rows:
             r_id = int(r['id'])
             if r_id == n:
@@ -58,19 +67,27 @@ class Module3Server(Service):
             m = match.ratio()
             str_diff = ''
             sql = ''
-            print('=========')
-            print('ID = '+str(r['id']))
-            print('Similarity = '+str(m))
+            temp_text = new_id_text+str(r['id'])+'\n'
+            message += temp_text
+            temp_text = sim+str(m)+'\n'
+            message += temp_text
             for line in diff:
-                print (line)
                 str_diff += line
+                message += line+'\n'
             sql = "INSERT INTO programs_diffs (program1_id, program2_id, similarity, diff) VALUES ("+str(n)+","+str(r_id)+","+str(m)+",\'"+str_diff+"\')"
             self.db.executesql(sql)
             self.db.commit_changes()
-            print('')
+        self.message_for_client = message
+        
+    def exposed_get_message(self):
+        return self.message_for_client
 
+    def exposed_get_program_id(self):
+        if self.db_thread.is_alive:
+            self.db_thread.join()
+        return  self.client_program_id
 
 if __name__ == '__main__':
-    s = ThreadedServer(Module3Server, hostname='localhost', port=18871, protocol_config={"allow_public_attrs" : True})
+    s = ThreadedServer(Module4Server, hostname='localhost', port=18871, protocol_config={"allow_public_attrs" : True})
     s.start()
     
