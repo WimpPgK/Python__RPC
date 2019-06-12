@@ -1,9 +1,14 @@
 import sqlite3
 from sqlite3 import Error
 
+"""
+Class for handling the database and saving the results of running programs
+
+"""
+
 
 class ResultsDataBase:
-    # the folder for the database should be created earlier
+    """ the folder for the database should be created earlier """
     database = "C:\\sqlite\db\pythonsqlite.db"
 
     def create_connection(self, db_file):
@@ -21,7 +26,10 @@ class ResultsDataBase:
         return None
 
     def create_table(self, conn):
-
+        """
+           If not exits create a table programs_results
+           :param conn:
+       """
         sql_create_programs_results_table = """ CREATE TABLE IF NOT EXISTS programs_results (
                                             id integer PRIMARY KEY,
                                             program_name text NOT NULL,
@@ -43,10 +51,9 @@ class ResultsDataBase:
 
     def add_program_result(self, result):
         """
-        Add a new result into the programs_results table
-        :param result:
-        :return:
-        :return: project id
+            Add a new result into the programs_results table
+            :param result:
+            :return: project id
         """
 
         conn = self.create_connection(self.database)
@@ -63,9 +70,8 @@ class ResultsDataBase:
 
     def select_all_results(self):
         """
-        Query results
-        :param conn: the Connection object
-        :return:
+            Print all results from base
+            :return:
         """
 
         conn = self.create_connection(self.database)
@@ -85,9 +91,9 @@ class ResultsDataBase:
             # if not exits create a table programs_results
             self.create_table(conn)
 
-            # add new results to base (name, result_value)
+            # add new results to base (program_name, result_value)
             result = ('test program', '54.456')
-            result_id = self.add_program_result(conn, result)
+            result_id = self.add_program_result(result)
 
             print("Get all results from base")
-            self.select_all_results(conn)
+            self.select_all_results()
