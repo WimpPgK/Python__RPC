@@ -23,9 +23,8 @@ class Module3Server(Service):
             file.write(line)
             code_text += line
 
-        db_thread = threading.Thread(target=save_into_db, args=(code_text,))
+        db_thread = threading.Thread(target=self.save_into_db, args=(code_text,))
         db_thread.start()
-        # self.save_into_db(code_text)
         file.close()
         return True
 

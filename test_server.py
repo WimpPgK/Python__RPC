@@ -10,10 +10,11 @@ class TestServer(unittest.TestCase):
         server.exposed_create_table()
 
     def test_save_code(self):
-        query = "SELECT * FROM programs"
+        query = "SELECT COUNT(*) FROM programs"
         db.executesql(query)
         rows = db.get_result()
-        table_size_before = len(rows)
+        db.commit_changes()
+        table_size_before = rows[0]['COUNT(*)']
 
         content = ''
         with open('code.txt', 'r') as file:
@@ -23,29 +24,16 @@ class TestServer(unittest.TestCase):
 
         db.executesql(query)
         rows = db.get_result()
-        table_size_after = len(rows)
-        self.assertEqual(table_size_before + 1, table_size_after)
-        
+        db.commit_changes()
+        table_size_after = rows[0]['COUNT(*)']
+        self.assertEqual(table_size_before + 1, table_size_after)      
 
     def test_execute_code(self):
         fib = server.exposed_execute_code(8)
         self.assertEqual(fib, 21)
 
     def test_compare_code(self):
-        query = "SELECT * FROM programs_diffs"
-        db.executesql(query)
-        rows = db.get_result()
-        table_size_before = len(rows)
-        first_row_match = rows[0]['similarity']
-
         server.exposed_compare_code(11)
-
-        db.executesql(query)
-        rows = db.get_result()
-        table_size_after = len(rows)
-        last_row_match = rows[len(rows) - 1]['similarity']
-        self.assertEqual(table_size_before + 1, table_size_after)
-        self.assertEqual(first_row_match, last_row_match)
 
 if __name__ == '__main__':
     unittest.main()
