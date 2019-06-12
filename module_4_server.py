@@ -3,6 +3,7 @@ from rpyc.utils.server import ThreadedServer
 import subprocess
 from dbmanager import DbManager
 import difflib
+import threading
 
 class Module3Server(Service):
 
@@ -21,7 +22,10 @@ class Module3Server(Service):
         for line in code:
             file.write(line)
             code_text += line
-        self.save_into_db(code_text)
+
+        db_thread = threading.Thread(target=save_into_db, args=(code_text,))
+        db_thread.start()
+        # self.save_into_db(code_text)
         file.close()
         return True
 

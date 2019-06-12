@@ -78,6 +78,8 @@ class ResultsDataBase:
         for row in rows:
             print(row)
 
+        return rows
+
     def main(self):
         # create a database connection
         conn = self.create_connection(self.database)
@@ -87,7 +89,7 @@ class ResultsDataBase:
 
             # add new results to base (name, result_value)
             result = ('test program', '54.456')
-            result_id = self.add_program_result(conn, result)
+            result_id = self.add_program_result(result)
 
             print("Get all results from base")
-            self.select_all_results(conn)
+            rows = self.select_all_results()
