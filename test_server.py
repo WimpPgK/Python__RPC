@@ -30,10 +30,10 @@ class TestServer(unittest.TestCase):
 
     def test_execute_code(self):
         fib = server.exposed_execute_code(8)
-        self.assertEqual(fib, 21)
+        self.assertEqual(fib, '21')
 
     def test_compare_code(self):
-        server.exposed_compare_code(68)
+        server.exposed_compare_code(124)
 
 if __name__ == '__main__':
     unittest.main()
