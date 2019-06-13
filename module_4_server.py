@@ -40,8 +40,29 @@ class Module4Server(Service):
         return self.client_program_id
 
     def exposed_execute_code(self, n : int):
-        fib = subprocess.call("python "+self.filename + ' ' + str(n))
-        return int(fib)
+        try:
+            val = int(n)
+            if val % 1 != 0 or val < 0:
+                raise ValueError()
+
+            p = subprocess.Popen(["python", self.filename, str(n)], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT)
+            p.wait()
+            print(p.returncode)
+            if p.returncode == 1 and val != 2 and val != 0:
+                raise Exception
+
+        except ValueError:
+            er_comment = "Wprowadzono niepoprawna wartosc, sprobuj ponownie."
+            return er_comment
+
+        except Exception:
+            er_comment = "Blad w programie obliczajacym ciag Fib"
+            return er_comment
+
+        else:
+            fib = subprocess.call("python " + self.filename + ' ' + str(n))
+            return str(fib) + " - program zadzialal poprawnie"
 
     def exposed_compare_code(self, n : int):
         sql = "SELECT * FROM programs"
