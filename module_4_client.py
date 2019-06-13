@@ -38,21 +38,14 @@ class module_4_client:
             if value == 'q':
                 break
             else: 
-                if value.isdigit() == False:
-                    print("Wprowadzona wartość nie jest dodatnią liczbą całkowitą")
-                    continue
+                result = str(server.root.execute_code(value))
+                print('Fibb ['+ value + '] = ' + str(result) + '\n')
                 
-                n_fib = int(value)
-
-            result = str(server.root.execute_code(n_fib))
-            print('Fibb ['+ str(n_fib) + '] = ' + str(result) + '\n')
-            
-            result = ('Fibb ['+ str(n_fib) + ']', str(result))
-            result_id = resultsDataBase.add_program_result(result)
-            print("All results from base:")
-            rows = resultsDataBase.select_all_results()
-            print()
-
+                result = ('Fibb ['+ value + ']', str(result))
+                result_id = resultsDataBase.add_program_result(result)
+                print("All results from base:")
+                rows = resultsDataBase.select_all_results()
+                print()
 
     def get_file(self):
         """

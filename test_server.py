@@ -29,7 +29,7 @@ class TestServer(unittest.TestCase):
         self.assertEqual(table_size_before + 1, table_size_after)      
 
     def test_execute_code(self):
-        fib = server.exposed_execute_code(8)
+        fib = server.exposed_execute_code('8')
         self.assertEqual(fib, '21')
 
     def test_compare_code(self):

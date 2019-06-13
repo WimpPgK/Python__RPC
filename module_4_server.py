@@ -39,30 +39,22 @@ class Module4Server(Service):
         self.client_program_id = self.db.cursor.lastrowid
         return self.client_program_id
 
-    def exposed_execute_code(self, n : int):
+    def exposed_execute_code(self, val : str):
         try:
-            val = int(n)
-            if val % 1 != 0 or val < 0:
+            if val.isdigit() == False:
                 raise ValueError()
 
-            p = subprocess.Popen(["python", self.filename, str(n)], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                 stderr=subprocess.STDOUT)
-            p.wait()
-            print(p.returncode)
-            if p.returncode == 1 and val != 2 and val != 0:
-                raise Exception
+            fib = subprocess.call("python " + self.filename + ' ' + val)
+            return str(fib)
 
         except ValueError:
-            er_comment = "Wprowadzono niepoprawna wartosc, sprobuj ponownie."
+            er_comment = "Niepoprawna wartosc argumentu"
             return er_comment
 
-        except Exception:
+        except:
             er_comment = "Blad w programie obliczajacym ciag Fib"
             return er_comment
 
-        else:
-            fib = subprocess.call("python " + self.filename + ' ' + str(n))
-            return str(fib)
 
     def exposed_compare_code(self, n : int):
         sql = "SELECT * FROM programs"
