@@ -62,7 +62,7 @@ class Module4Server(Service):
 
         else:
             fib = subprocess.call("python " + self.filename + ' ' + str(n))
-            return str(fib) + " - program zadzialal poprawnie"
+            return str(fib)
 
     def exposed_compare_code(self, n : int):
         sql = "SELECT * FROM programs"

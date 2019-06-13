@@ -86,16 +86,16 @@ class ResultsDataBase:
 
         return rows
 
-    def main(self):
-        # create a database connection
-        conn = self.create_connection(self.database)
-        with conn:
-            # if not exits create a table programs_results
-            self.create_table(conn)
+    # def main(self):
+    #     # create a database connection
+    #     conn = self.create_connection(self.database)
+    #     with conn:
+    #         # if not exits create a table programs_results
+    #         self.create_table(conn)
 
-            # add new results to base (program_name, result_value)
-            result = ('test program', '54.456')
-            result_id = self.add_program_result(result)
+    #         # add new results to base (program_name, result_value)
+    #         result = ('test program', '54.456')
+    #         result_id = self.add_program_result(result)
 
-            print("Get all results from base")
-            rows = self.select_all_results()
+    #         print("Get all results from base")
+    #         rows = self.select_all_results()

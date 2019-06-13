@@ -1,8 +1,8 @@
 import unittest
-from module_4_server import Module3Server
+from module_4_server import Module4Server
 from dbmanager import DbManager
 
-server = Module3Server()
+server = Module4Server()
 db = DbManager('localhost', 'root', '', 'testowa')
 
 class TestServer(unittest.TestCase):
@@ -33,7 +33,7 @@ class TestServer(unittest.TestCase):
         self.assertEqual(fib, 21)
 
     def test_compare_code(self):
-        server.exposed_compare_code(11)
+        server.exposed_compare_code(68)
 
 if __name__ == '__main__':
     unittest.main()
