@@ -48,6 +48,7 @@ class DbManager:
         
         self.lastresult = list()
 
+#
         for r in result:
             counter = 0
             dic = dict()
